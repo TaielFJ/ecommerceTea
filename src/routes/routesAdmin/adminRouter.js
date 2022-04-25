@@ -8,11 +8,14 @@ const adminProductsController = require("../../controllers/adminControllers/admi
 //Se require el modulo de multer
 const uploadImgProducts = require("../../middlewares/uploadImgProducts")
 
+//Se requieren las validaciones
+const productsValidator = require("../../validations/productsValidator")
+
 router.get("/", adminController.listaProductos);
 
 router.get("/productos/agregar", adminProductsController.addProduct);
 
-router.post("/productos", uploadImgProducts.single("image") ,adminProductsController.createProduct); //Se añade el middleware con metodo single y el name del input file
+router.post("/productos", uploadImgProducts.single("image") ,productsValidator,adminProductsController.createProduct); //Se añade el middleware con metodo single y el name del input file
 
 router.get("/productos/editar/:id", adminProductsController.editProduct);
 

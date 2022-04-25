@@ -1,4 +1,5 @@
 const {getProducts, writeProducts} = require("../../data/data");
+const {validationResult}=require('express-validator')
 
 module.exports = {
     addProduct: (req, res)=>{
@@ -9,7 +10,10 @@ module.exports = {
     },
     createProduct: (req,res)=>{
 
-        let lastId = 0;
+        let errors = validationResult(req)
+
+        if(errors.isEmpty()){
+            let lastId = 0;
 
         getProducts.forEach(producto => {
             if(producto.id > lastId){
@@ -30,6 +34,16 @@ module.exports = {
         writeProducts(getProducts)
 
         res.redirect("/admin")
+        } else{
+            res.render("admin/products/addProducts",{
+                titulo: "Nuevo producto",
+                postHeader: "Ingrese los datos del nuevo producto",
+                errors: errors.mapped(),
+                old: req.body
+            })
+        }
+
+        
     },
 
     editProduct: (req,res)=>{
